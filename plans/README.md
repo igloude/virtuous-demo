@@ -7,6 +7,7 @@ One directory, one numbering sequence, one index for ds-doctor doc-fix plans, ds
 | Date | Kind | File | Subject | Verdict |
 |---|---|---|---|---|
 | 2026-08-19 | ds-doctor audit | (this index + `ds/MANIFEST.md`, `ds/tokens.json`) | virtuous-demo@0.1.0 at `732ac74` | contracts partial · tokens partial · guidelines absent · machine-surface partial (manifest now written) · deprecation ready |
+| 2026-08-19 | ds-doctor audit (2nd) | (this index + `ds/MANIFEST.md` header regenerated; `ds/tokens.json` unchanged, verified byte-identical to a fresh resolve) | virtuous-demo@0.1.0 at `128dacd` | contracts partial (theme API undocumented, Tokens-used incomplete) · tokens partial (`--color-text_muted` source mismatch still live) · guidelines partial (3 severity-map keys inert) · machine-surface ready (`.d.ts` emitted, spec API hash, `ds/` in `files`, CLAUDE.md) · deprecation ready |
 
 ## Plans
 
@@ -20,6 +21,9 @@ otherwise. Executors: read the full plan, honor STOP conditions, update your row
 | [003](003-button-doc-drift.md) | Remove the phantom `loading` prop from Button docs | P1 | S | none | DONE |
 | [004](004-component-a11y-and-disambiguation.md) | A11y contract for every component + Link-vs-Button guidance | P2 | S | 003 | DONE |
 | [005](005-agent-facing-docs.md) | Add CLAUDE.md pointing generators at the manifest | P2 | S | none | DONE |
+| [006](006-severity-map-class-keys.md) | Rename severity-map class keys to ds-drift's vocabulary (`usage.hallucinated-prop`, `usage.override-fighting`, `adoption.duplicate`) | P1 | S | none | TODO |
+| [007](007-theme-api-docs.md) | Document `applyTheme` / `getStoredTheme` / `Theme` in docs/tokens.md | P2 | S | none | TODO |
+| [008](008-tokens-used-and-field-ids.md) | Complete "Tokens used" in button/input/link docs; document field `id` derivation | P3 | S | none | TODO |
 
 Status: TODO | IN PROGRESS | DONE | BLOCKED (reason) | REJECTED (rationale)
 
@@ -27,7 +31,8 @@ Status: TODO | IN PROGRESS | DONE | BLOCKED (reason) | REJECTED (rationale)
 
 - 001 and 002 both edit the `<!-- hand-maintained: policy -->` zone of `ds/MANIFEST.md` (different bullets). Apply 001 first, then re-read the zone before 002.
 - 003 and 004 both edit `docs/components/button.md`; 003 first.
-- After 001–004 land: run `/ds-doctor manifest` to regenerate the generated zones.
+- After 001–004 land: run `/ds-doctor manifest` to regenerate the generated zones. *(Done 2026-08-19 at `128dacd`.)*
+- 006 edits only the `severity-map` hand zone of `ds/MANIFEST.md`; 007 and 008 edit only `docs/`. They are independent; run `/ds-doctor manifest` once after all three land.
 
 ## Coverage maps
 
@@ -45,6 +50,14 @@ Not doc-fix work — these need **source** changes and belong on the DS backlog 
 - **Link external SR text** — `src/components/Link/Link.tsx:21` glyph is `aria-hidden`, no visually-hidden "opens in a new tab". Plan 004 documents the caller's obligation; the component fix is source work.
 - **Doc examples not compiled** — no docs/Storybook build exists; snippets reference free identifiers (`save`, `api`, `errors`). Not a finding until a docs build exists; verification gate for all plans is `npm run typecheck` + grep.
 - **READY-13 deprecation hygiene** — nothing deprecated, no dead exports (every export in `src/index.ts` is used by `src/demo/App.tsx:2` and documented). Ready; no action.
+
+Second audit, 2026-08-19 at `128dacd`:
+
+- **READY-09 / READY-14 packaging — closed.** `128dacd` committed `exports`/`types`/`files: ["dist","ds"]`, `tsconfig.build.json`; `npm run build` emits 13 `dist/**/*.d.ts`. Manifest header now carries the spec `.d.ts` hash (`sha256:05e42da9…`) and commit `128dacd`; the fallback-recipe note is gone.
+- **READY-03 (`--color-text_muted`) — still open, still source.** Line refs corrected to `src/tokens/tokens.css:96,139,181` and `docs/tokens.md:53`. Downstream cost has grown: `ds/tokens.json` carries `color-text_muted`, docs tell generators to write `--color-text-muted`, so a generator following the docs earns a `token.hallucinated` finding from the gate. A 3-line rename in tokens.css is the cheapest high-leverage fix in the repo; then `/ds-doctor manifest` and drop the parenthetical plan 008 adds.
+- **READY-19 `Form` JSDoc argument order** — `src/components/Form/Form.tsx:5` "Called with the native event and a plain object of field name → value" reads as `(event, values)`; the signature is `(values, event)` (`Form.tsx:6`) and the comment ships in `dist/components/Form/Form.d.ts`. Comment-only edit, but in a source file → routed. Advisory.
+- **READY-20 side-effect CSS imports in `.d.ts`** — `dist/components/Button/Button.d.ts:2` `import "./Button.css"`, `dist/tokens/index.d.ts:1` `import "./tokens.css"` (same for Form/Input/Link/Textarea); `dist/` ships only `virtuous-demo.css`. Harmless under default TS options; fails under `noUncheckedSideEffectImports`. Build-config item (`tsconfig.build.json`) → routed. Advisory, MED confidence on consumer impact.
+- **Plans 001–005 spot-checked DONE**: `button.md:24` no `loading` prop; `CLAUDE.md` present; policy/severity/waiver/exclusion zones populated; a11y + "Button or Link?" sections present.
 
 ## Coverage baselines
 
