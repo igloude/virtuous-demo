@@ -62,9 +62,9 @@ No deprecated exports as of generation.
 | token.literal.exact | blocking | A literal that exactly matches a semantic token is a mechanical fix; no reason to ship it |
 | token.literal.near | should-fix | Needs a human eye to confirm the intended token (ΔE ≤ 10) |
 | token.literal.none | advisory | A real design decision — route to the contribution path, not a codemod |
-| usage.prop.unknown | blocking | Props not in the exported `*Props` interface are hallucinations; typecheck catches most, docs must not contradict types (plans/003) |
-| override.internal-selector | should-fix | App CSS targeting `.vds-*` fights the DS; soft until plan 002 has been visible for one release |
-| adoption.hand-rolled | should-fix | Hand-rolls are allowed only behind a waiver; unwaived ones are findings |
+| usage.hallucinated-prop | blocking | Props not in the exported `*Props` interface are hallucinations; typecheck catches most, docs must not contradict types (plans/003) |
+| usage.override-fighting | should-fix | App CSS targeting `.vds-*` fights the DS; soft until plan 002 has been visible for one release |
+| adoption.duplicate | should-fix | Hand-rolls are allowed only behind a waiver; unwaived ones are findings (class key aligned to ds-drift vocabulary, plan 006) |
 <!-- /hand-maintained -->
 
 <!-- hand-maintained: waivers -->

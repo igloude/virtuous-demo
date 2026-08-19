@@ -37,4 +37,4 @@ Extends all native `<button>` attributes. `type` defaults to `"button"`.
 
 ## Tokens used
 
-`--color-action-*`, `--radius-md`, `--space-*`, `--font-size-*`, `--focus-ring-*`
+`--color-action-primary-*`, `--color-action-secondary-*`, `--color-action-danger-*`, `--color-focus-ring`, `--radius-md`, `--space-1` … `--space-5`, `--font-family-sans`, `--font-size-sm/md/lg`, `--font-weight-medium`, `--line-height-tight`, `--duration-fast`, `--easing-standard`, `--focus-ring-width`, `--focus-ring-offset`

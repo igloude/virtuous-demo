@@ -21,9 +21,9 @@ otherwise. Executors: read the full plan, honor STOP conditions, update your row
 | [003](003-button-doc-drift.md) | Remove the phantom `loading` prop from Button docs | P1 | S | none | DONE |
 | [004](004-component-a11y-and-disambiguation.md) | A11y contract for every component + Link-vs-Button guidance | P2 | S | 003 | DONE |
 | [005](005-agent-facing-docs.md) | Add CLAUDE.md pointing generators at the manifest | P2 | S | none | DONE |
-| [006](006-severity-map-class-keys.md) | Rename severity-map class keys to ds-drift's vocabulary (`usage.hallucinated-prop`, `usage.override-fighting`, `adoption.duplicate`) | P1 | S | none | TODO |
-| [007](007-theme-api-docs.md) | Document `applyTheme` / `getStoredTheme` / `Theme` in docs/tokens.md | P2 | S | none | TODO |
-| [008](008-tokens-used-and-field-ids.md) | Complete "Tokens used" in button/input/link docs; document field `id` derivation | P3 | S | none | TODO |
+| [006](006-severity-map-class-keys.md) | Rename severity-map class keys to ds-drift's vocabulary (`usage.hallucinated-prop`, `usage.override-fighting`, `adoption.duplicate`) | P1 | S | none | DONE |
+| [007](007-theme-api-docs.md) | Document `applyTheme` / `getStoredTheme` / `Theme` in docs/tokens.md | P2 | S | none | DONE |
+| [008](008-tokens-used-and-field-ids.md) | Complete "Tokens used" in button/input/link docs; document field `id` derivation | P3 | S | none | DONE |
 
 Status: TODO | IN PROGRESS | DONE | BLOCKED (reason) | REJECTED (rationale)
 
