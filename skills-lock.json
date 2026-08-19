@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "skills": {
+    "ds": {
+      "source": "igloude/ds-skills",
+      "sourceType": "github",
+      "skillPath": "skills/ds/SKILL.md",
+      "computedHash": "f79cc5eb26671da3bcb4d8abc68bd387145076f027c1cb065449d886fb11591a"
+    },
+    "ds-doctor": {
+      "source": "igloude/ds-skills",
+      "sourceType": "github",
+      "skillPath": "skills/ds-doctor/SKILL.md",
+      "computedHash": "c79353d4a775260d7cf6df556b4f1ad5cae2236df03bb51a19f0d542b77a7c78"
+    },
+    "ds-drift": {
+      "source": "igloude/ds-skills",
+      "sourceType": "github",
+      "skillPath": "skills/ds-drift/SKILL.md",
+      "computedHash": "d1e08d9c5293ece1036bd7eb817a5dd750399b9afd5e092093557bc3b0f7296c"
+    },
+    "ds-plan": {
+      "source": "igloude/ds-skills",
+      "sourceType": "github",
+      "skillPath": "skills/ds-plan/SKILL.md",
+      "computedHash": "6b8d97210083091c2a0d3f03ea050d63b53c6e0864b03668966eff9930b1d950"
+    }
+  }
+}
