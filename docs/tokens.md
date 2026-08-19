@@ -38,7 +38,24 @@ Semantic tokens are defined three times:
 2. `[data-theme="dark"]` — explicit dark
 3. `@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) }` — follows the OS when no explicit theme is set
 
-Use `applyTheme("light" | "dark" | "system")` from `src/tokens/theme.ts` to switch at runtime; the choice is persisted to `localStorage`.
+Switch themes at runtime with the exported theme API (imported from the package, not by file path):
+
+```tsx
+import { applyTheme, getStoredTheme, type Theme } from "virtuous-demo";
+
+const initial: Theme = getStoredTheme(); // "system" until the user picks one
+applyTheme(initial);
+```
+
+### Theme API
+
+| Export | Type | Description |
+|---|---|---|
+| `Theme` | `"light" \| "dark" \| "system"` | The three accepted values. |
+| `applyTheme` | `(theme: Theme) => void` | Sets `data-theme="light"`/`"dark"` on `<html>`; `"system"` removes the attribute so `prefers-color-scheme` applies. Persists the choice to `localStorage` under the key `"vds-theme"`; storage failures are ignored. |
+| `getStoredTheme` | `() => Theme` | Reads `"vds-theme"` from `localStorage`; returns `"system"` when unset, unreadable, or not one of the three values. |
+
+Do not set `data-theme` by hand — always go through `applyTheme` so the stored preference stays in sync.
 
 ## Semantic color tokens
 

@@ -3,11 +3,9 @@
 <!-- generated: header -->
 - **Manifest schema**: 2
 - **Package**: virtuous-demo@0.1.0
-- **API hash**: sha256:074d86afd9f5d4e8174094d94d084eb2c12b19cf4708195971e5e40a959275e6
-  - *Recipe (fallback)*: the package emits no `.d.ts` (`tsconfig.json` has `noEmit: true`; no `types`/`exports` in `package.json`), so the hash is over the public source types instead:
-    `find src -name '*.ts' -o -name '*.tsx' | grep -v '^src/demo' | LC_ALL=C sort | xargs cat | sha256sum`.
-    Switch to the spec's `.d.ts` recipe once declarations are emitted (see plans/README.md, READY-09). *At generation time, uncommitted working-tree changes adding `exports`/`types`, `tsconfig.build.json` and a lib build were present — once they are committed and `npm run build` emits `dist/*.d.ts`, re-run `/ds-doctor manifest` to switch the hash to the spec recipe.*
-- **Generated**: 2026-08-19, commit `732ac74` (+ uncommitted doc-plan edits 001–005), by ds-doctor v0.5.0
+- **API hash**: sha256:05e42da91faf40d093fbdd08ae7a14e114d9b9f93feafad9a52f7671a479ed3f
+  - *Recipe*: spec recipe over the emitted declarations — `npm run build` then `cd dist && find . -name '*.d.ts' -not -path './node_modules/*' | LC_ALL=C sort | xargs cat | sha256sum` (13 files). Consumers recompute against `node_modules/virtuous-demo/dist`.
+- **Generated**: 2026-08-19, commit `128dacd`, by ds-doctor v0.5.0
 - **Token source**: src/tokens/tokens.css → ds/tokens.json (resolved)
 <!-- /generated -->
 
@@ -39,7 +37,7 @@ No deprecated exports as of generation.
 - Primitives (`--palette-*`, 21 entries) are **excluded** from ds/tokens.json on purpose: components may not consume them (README.md:22), so nearest-token matching must not propose them.
 - All references resolve; no unresolvable references as of generation. 82 entries total in ds/tokens.json.
 - Known irregularities (facts, not policy — see plans/README.md):
-  - `--color-text_muted` is spelled with an underscore in `src/tokens/tokens.css:96,139,184`; `docs/tokens.md:45`, `src/components/field.css:58`, and `src/demo/demo.css:13` reference `--color-text-muted` (hyphen), which is **undefined** — hint text currently inherits its color. ds/tokens.json carries the name as defined (`color-text_muted`). Source fix required (READY-03).
+  - `--color-text_muted` is spelled with an underscore in `src/tokens/tokens.css:96,139,181`; `docs/tokens.md:53`, `src/components/field.css:58`, and `src/demo/demo.css:13` reference `--color-text-muted` (hyphen), which is **undefined** — hint text currently inherits its color. ds/tokens.json carries the name as defined (`color-text_muted`). Source fix required (READY-03).
   - Dark-theme `--color-text-danger`, `--color-border-danger`, `--color-action-danger-bg-hover` are the raw literal `#ff7b7b` (no primitive). They resolve, but bypass the two-tier rule stated in `src/tokens/tokens.css:5-7` (READY-06).
 - **Enforcement scope**: ds-drift's mechanical gate (nearest_token.mjs) polices **color** only. Spacing, radius, typography, motion and focus-ring tokens are policed by docs and review, not the gate — a conformance PASS says nothing about them.
 <!-- /generated -->
@@ -64,9 +62,9 @@ No deprecated exports as of generation.
 | token.literal.exact | blocking | A literal that exactly matches a semantic token is a mechanical fix; no reason to ship it |
 | token.literal.near | should-fix | Needs a human eye to confirm the intended token (ΔE ≤ 10) |
 | token.literal.none | advisory | A real design decision — route to the contribution path, not a codemod |
-| usage.prop.unknown | blocking | Props not in the exported `*Props` interface are hallucinations; typecheck catches most, docs must not contradict types (plans/003) |
-| override.internal-selector | should-fix | App CSS targeting `.vds-*` fights the DS; soft until plan 002 has been visible for one release |
-| adoption.hand-rolled | should-fix | Hand-rolls are allowed only behind a waiver; unwaived ones are findings |
+| usage.hallucinated-prop | blocking | Props not in the exported `*Props` interface are hallucinations; typecheck catches most, docs must not contradict types (plans/003) |
+| usage.override-fighting | should-fix | App CSS targeting `.vds-*` fights the DS; soft until plan 002 has been visible for one release |
+| adoption.duplicate | should-fix | Hand-rolls are allowed only behind a waiver; unwaived ones are findings (class key aligned to ds-drift vocabulary, plan 006) |
 <!-- /hand-maintained -->
 
 <!-- hand-maintained: waivers -->

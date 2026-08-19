@@ -29,4 +29,4 @@ Extends all native `<a>` attributes.
 
 ## Tokens used
 
-`--color-text-link`, `--color-text-link-hover`, `--color-focus-ring`, `--radius-sm`
+`--color-text-link`, `--color-text-link-hover`, `--color-focus-ring`, `--radius-sm`, `--duration-fast`, `--easing-standard`, `--focus-ring-width`, `--focus-ring-offset`
