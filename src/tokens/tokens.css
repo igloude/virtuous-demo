@@ -1,0 +1,212 @@
+/**
+ * Design tokens
+ *
+ * Two layers:
+ *   1. Primitive tokens  — raw palette/scale values. Never referenced by components.
+ *   2. Semantic tokens   — intent-based aliases (surface, text, border, action…).
+ *      Components ONLY consume semantic tokens.
+ *
+ * Theming: semantic tokens are redefined under [data-theme="dark"], and also
+ * follow prefers-color-scheme when no explicit theme is set.
+ *
+ * Naming convention: --{category}-{property}-{variant?}-{state?} in kebab-case.
+ *   e.g. --color-text-primary, --color-action-primary-bg-hover, --space-3
+ */
+
+/* ---------------------------------------------------------------------------
+ * 1. Primitives
+ * ------------------------------------------------------------------------- */
+:root {
+  /* Neutral scale */
+  --palette-neutral-0: #ffffff;
+  --palette-neutral-50: #f8f9fb;
+  --palette-neutral-100: #eef0f4;
+  --palette-neutral-200: #dde1e8;
+  --palette-neutral-300: #c3c9d4;
+  --palette-neutral-400: #98a1b0;
+  --palette-neutral-500: #6c7687;
+  --palette-neutral-600: #4d5666;
+  --palette-neutral-700: #363d4a;
+  --palette-neutral-800: #232832;
+  --palette-neutral-900: #151920;
+  --palette-neutral-1000: #0b0d11;
+
+  /* Brand scale */
+  --palette-brand-100: #e6ecff;
+  --palette-brand-300: #a3b6ff;
+  --palette-brand-500: #4f6bff;
+  --palette-brand-600: #3d56e0;
+  --palette-brand-700: #2f44b8;
+
+  /* Status */
+  --palette-red-100: #fde8e8;
+  --palette-red-500: #dc3b3b;
+  --palette-red-600: #b92f2f;
+  --palette-green-500: #2f9e5b;
+
+  /* Spacing scale (4px base) */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-family-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-size-sm: 0.8125rem;
+  --font-size-md: 0.9375rem;
+  --font-size-lg: 1.0625rem;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+
+  /* Motion */
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Focus ring */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. Semantic tokens — light (default)
+ * ------------------------------------------------------------------------- */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --color-surface-default: var(--palette-neutral-0);
+  --color-surface-subtle: var(--palette-neutral-50);
+  --color-surface-raised: var(--palette-neutral-0);
+
+  --color-text-primary: var(--palette-neutral-900);
+  --color-text_muted: var(--palette-neutral-500);
+  --color-text-inverse: var(--palette-neutral-0);
+  --color-text-link: var(--palette-brand-600);
+  --color-text-link-hover: var(--palette-brand-700);
+  --color-text-danger: var(--palette-red-600);
+
+  --color-border-default: var(--palette-neutral-200);
+  --color-border-strong: var(--palette-neutral-300);
+  --color-border-danger: var(--palette-red-500);
+
+  --color-action-primary-bg: var(--palette-brand-500);
+  --color-action-primary-bg-hover: var(--palette-brand-600);
+  --color-action-primary-bg-active: var(--palette-brand-700);
+  --color-action-primary-fg: var(--palette-neutral-0);
+
+  --color-action-secondary-bg: transparent;
+  --color-action-secondary-bg-hover: var(--palette-neutral-100);
+  --color-action-secondary-bg-active: var(--palette-neutral-200);
+  --color-action-secondary-fg: var(--palette-neutral-800);
+  --color-action-secondary-border: var(--palette-neutral-300);
+
+  --color-action-danger-bg: var(--palette-red-500);
+  --color-action-danger-bg-hover: var(--palette-red-600);
+  --color-action-danger-fg: var(--palette-neutral-0);
+
+  --color-field-bg: var(--palette-neutral-0);
+  --color-field-bg-disabled: var(--palette-neutral-100);
+  --color-field-placeholder: var(--palette-neutral-400);
+
+  --color-focus-ring: var(--palette-brand-500);
+}
+
+/* ---------------------------------------------------------------------------
+ * 2b. Semantic tokens — dark
+ * ------------------------------------------------------------------------- */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-surface-default: var(--palette-neutral-900);
+  --color-surface-subtle: var(--palette-neutral-800);
+  --color-surface-raised: var(--palette-neutral-800);
+
+  --color-text-primary: var(--palette-neutral-50);
+  --color-text_muted: var(--palette-neutral-400);
+  --color-text-inverse: var(--palette-neutral-900);
+  --color-text-link: var(--palette-brand-300);
+  --color-text-link-hover: var(--palette-brand-100);
+  --color-text-danger: #ff7b7b;
+
+  --color-border-default: var(--palette-neutral-700);
+  --color-border-strong: var(--palette-neutral-600);
+  --color-border-danger: #ff7b7b;
+
+  --color-action-primary-bg: var(--palette-brand-500);
+  --color-action-primary-bg-hover: var(--palette-brand-300);
+  --color-action-primary-bg-active: var(--palette-brand-100);
+  --color-action-primary-fg: var(--palette-neutral-0);
+
+  --color-action-secondary-bg: transparent;
+  --color-action-secondary-bg-hover: var(--palette-neutral-700);
+  --color-action-secondary-bg-active: var(--palette-neutral-600);
+  --color-action-secondary-fg: var(--palette-neutral-50);
+  --color-action-secondary-border: var(--palette-neutral-600);
+
+  --color-action-danger-bg: var(--palette-red-500);
+  --color-action-danger-bg-hover: #ff7b7b;
+  --color-action-danger-fg: var(--palette-neutral-0);
+
+  --color-field-bg: var(--palette-neutral-800);
+  --color-field-bg-disabled: var(--palette-neutral-700);
+  --color-field-placeholder: var(--palette-neutral-500);
+
+  --color-focus-ring: var(--palette-brand-300);
+}
+
+/* Follow OS preference when no explicit theme is set. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --color-surface-default: var(--palette-neutral-900);
+    --color-surface-subtle: var(--palette-neutral-800);
+    --color-surface-raised: var(--palette-neutral-800);
+
+    --color-text-primary: var(--palette-neutral-50);
+    --color-text_muted: var(--palette-neutral-400);
+    --color-text-inverse: var(--palette-neutral-900);
+    --color-text-link: var(--palette-brand-300);
+    --color-text-link-hover: var(--palette-brand-100);
+    --color-text-danger: #ff7b7b;
+
+    --color-border-default: var(--palette-neutral-700);
+    --color-border-strong: var(--palette-neutral-600);
+    --color-border-danger: #ff7b7b;
+
+    --color-action-primary-bg: var(--palette-brand-500);
+    --color-action-primary-bg-hover: var(--palette-brand-300);
+    --color-action-primary-bg-active: var(--palette-brand-100);
+    --color-action-primary-fg: var(--palette-neutral-0);
+
+    --color-action-secondary-bg: transparent;
+    --color-action-secondary-bg-hover: var(--palette-neutral-700);
+    --color-action-secondary-bg-active: var(--palette-neutral-600);
+    --color-action-secondary-fg: var(--palette-neutral-50);
+    --color-action-secondary-border: var(--palette-neutral-600);
+
+    --color-action-danger-bg: var(--palette-red-500);
+    --color-action-danger-bg-hover: #ff7b7b;
+    --color-action-danger-fg: var(--palette-neutral-0);
+
+    --color-field-bg: var(--palette-neutral-800);
+    --color-field-bg-disabled: var(--palette-neutral-700);
+    --color-field-placeholder: var(--palette-neutral-500);
+
+    --color-focus-ring: var(--palette-brand-300);
+  }
+}

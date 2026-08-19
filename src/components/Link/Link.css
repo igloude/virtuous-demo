@@ -1,0 +1,15 @@
+.vds-link {
+  color: var(--color-text-link);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  border-radius: var(--radius-sm);
+  transition: color var(--duration-fast) var(--easing-standard);
+}
+.vds-link:hover { color: var(--color-text-link-hover); }
+.vds-link:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+.vds-link--subtle { text-decoration: none; }
+.vds-link--subtle:hover { text-decoration: underline; }
+.vds-link__external { margin-left: 0.25em; font-size: 0.85em; }

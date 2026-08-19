@@ -1,0 +1,55 @@
+.vds-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-family-sans);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    color var(--duration-fast) var(--easing-standard);
+}
+
+.vds-button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.vds-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Sizes */
+.vds-button--sm { font-size: var(--font-size-sm); padding: var(--space-1) var(--space-3); min-height: 2rem; }
+.vds-button--md { font-size: var(--font-size-md); padding: var(--space-2) var(--space-4); min-height: 2.5rem; }
+.vds-button--lg { font-size: var(--font-size-lg); padding: var(--space-3) var(--space-5); min-height: 3rem; }
+
+.vds-button--full { width: 100%; }
+
+/* Variants */
+.vds-button--primary {
+  background: var(--color-action-primary-bg);
+  color: var(--color-action-primary-fg);
+}
+.vds-button--primary:hover:not(:disabled) { background: var(--color-action-primary-bg-hover); }
+.vds-button--primary:active:not(:disabled) { background: var(--color-action-primary-bg-active); }
+
+.vds-button--secondary {
+  background: var(--color-action-secondary-bg);
+  color: var(--color-action-secondary-fg);
+  border-color: var(--color-action-secondary-border);
+}
+.vds-button--secondary:hover:not(:disabled) { background: var(--color-action-secondary-bg-hover); }
+.vds-button--secondary:active:not(:disabled) { background: var(--color-action-secondary-bg-active); }
+
+.vds-button--danger {
+  background: var(--color-action-danger-bg);
+  color: var(--color-action-danger-fg);
+}
+.vds-button--danger:hover:not(:disabled) { background: var(--color-action-danger-bg-hover); }
