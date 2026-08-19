@@ -18,6 +18,10 @@ Extends all native `<textarea>` attributes. Shares the `label` / `hint` / `error
 | `resize` | `"none" \| "vertical" \| "both"` | `"vertical"` | Which directions the user can drag-resize. |
 | `rows` | `number` | `4` | Initial visible rows. |
 
+## Accessibility
+
+Same contract as [Input](./input.md): the label is always rendered and associated via `htmlFor`; `hint` and `error` are linked with `aria-describedby`; `error` sets `aria-invalid` and is announced with `role="alert"`; `required` renders a visual `*` that is hidden from assistive tech (the native `required` attribute carries the semantics).
+
 ## Tokens used
 
 Same as Input.

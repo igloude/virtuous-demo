@@ -2,14 +2,31 @@
   "name": "virtuous-demo",
   "version": "0.1.0",
   "private": true,
+  "description": "Virtuous demo design system — tokens and React components.",
   "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/virtuous-demo.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "ds"
+  ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview",
+    "build": "tsc --noEmit && vite build --config vite.lib.config.ts && tsc -p tsconfig.build.json",
+    "build:demo": "vite build --outDir dist-demo",
+    "preview": "vite preview --outDir dist-demo",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
+  "peerDependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -18,6 +35,8 @@
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "^5.6.3",
-    "vite": "^5.4.11"
+    "vite": "^5.4.11",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }

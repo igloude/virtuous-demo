@@ -1,0 +1,156 @@
+# Plan 001: State the token & palette policy for components *and* consuming app code, and fix the token-layer table
+
+> **Executor instructions**: Follow this plan step by step. Run every
+> verification command and confirm the expected result before moving on.
+> If any STOP condition occurs, stop and report — do not improvise. When
+> done, update this plan's status row in `plans/README.md`.
+>
+> **Drift check (run first)**: `git diff --stat 732ac74..HEAD -- docs/tokens.md README.md ds/MANIFEST.md`
+> If any in-scope file changed since this plan was written, compare the
+> "Current state" excerpts against live code; on mismatch, STOP.
+> Known at planning time: `README.md` had uncommitted edits adding a
+> "Consuming as a package" section above Conventions — that alone is not drift;
+> the Conventions bullet quoted below must still be present verbatim.
+
+## Status
+
+- **Priority**: P1
+- **Effort**: S
+- **Risk**: LOW
+- **Depends on**: none
+- **Category**: tokens
+- **Downstream effect**: unblocks the whole `tokens` conformance category — `token.palette.raw` and `token.literal.*` findings are unadjudicable in app code until the policy says whether `--palette-*` and raw hex are allowed there. Also removes a doc contradiction that makes the non-color tier rule unenforceable.
+- **Planned at**: commit `732ac74`, 2026-08-19
+- **Issue**: —
+
+## Why this matters
+
+Today the only written rule is "components consume only semantic tokens, never `--palette-*`" (README.md:22, docs/tokens.md:12). It says nothing about app code, nothing about raw color literals, and the layer table in docs/tokens.md claims scale primitives (`--space-*`, `--radius-*`, …) are "consumed by semantic tokens only" while every component consumes them directly. A generating agent and a drift reviewer reading these docs reach different conclusions. After this plan, the palette/literal rule is written once for both components and apps, and the layer table matches how tokens are actually consumed.
+
+## Current state
+
+- `docs/tokens.md` — token documentation; the layer table (lines 7–12) and the semantic-token glob (line 50) are what this plan corrects.
+- `README.md` — "Conventions" (lines 20–25) holds the one existing rule.
+- `ds/MANIFEST.md` — the `<!-- hand-maintained: policy -->` zone (seeded by ds-doctor, contains "not yet decided — see plans/001" lines) is where the decided policy lands.
+
+Excerpts:
+
+```
+docs/tokens.md:7-12
+| Layer | Prefix | Purpose | Consumed by |
+|---|---|---|---|
+| Primitive | `--palette-*`, `--space-*`, `--radius-*`, `--font-*`, `--duration-*` | Raw values | Semantic tokens only |
+| Semantic | `--color-*`, `--focus-ring-*` | Intent-based aliases | Components |
+
+Components must never reference a `--palette-*` token directly.
+```
+
+```
+docs/tokens.md:50
+| `--color-action-{primary,secondary,danger}-{bg,fg,border}[-hover\|-active]` | Button styling |
+```
+
+```
+README.md:22
+- Components consume only semantic tokens (`--color-*`), never primitives (`--palette-*`).
+```
+
+Facts that contradict the table (do not change these files; they are evidence):
+- `src/components/Button/Button.css:5-10` uses `var(--space-2)`, `var(--font-family-sans)`, `var(--font-weight-medium)`, `var(--line-height-tight)`, `var(--radius-md)` directly.
+- `src/components/Form/Form.css:2-4` uses `var(--space-2|4|6)` directly.
+- `--focus-ring-width` / `--focus-ring-offset` are defined in the primitives block `src/tokens/tokens.css:79-81`, not the semantic block.
+- Tokens that the glob on docs/tokens.md:50 implies but that do **not** exist in `src/tokens/tokens.css`: `--color-action-primary-border`, `--color-action-danger-border`, `--color-action-danger-bg-active`, `--color-action-secondary-fg-hover`. The exact set is the 28 `color-*` keys in `ds/tokens.json`.
+
+Manifest lines this plan completes (`ds/MANIFEST.md`, policy hand zone):
+```
+- **Primitive tokens** (`--palette-*`): never consumed by components (README.md:22, docs/tokens.md:12). Scope for *consuming app code* is not yet decided — see plans/001.
+- **Raw color literals** in component or app CSS: not yet decided — see plans/001.
+```
+
+## Commands you will need
+
+| Purpose | Command | Expected on success |
+|---|---|---|
+| Typecheck | `npm run typecheck` | exit 0 (docs are not compiled; this guards against accidental src edits) |
+| Scope guard | `git status --porcelain` | only `docs/tokens.md`, `README.md`, `ds/MANIFEST.md`, `plans/README.md` listed |
+
+There is no docs or Storybook build in this repo (verified: `package.json` scripts are dev/build/preview/typecheck only).
+
+## Scope
+
+**In scope** (the only files you may modify): `docs/tokens.md`, `README.md`, `ds/MANIFEST.md` (only inside `<!-- hand-maintained: policy -->` … `<!-- /hand-maintained -->`), `plans/README.md` (status row).
+**Out of scope** (do NOT touch): `src/tokens/tokens.css` (token source — renaming/adding tokens is a DS source change, READY-03/06/07); any `src/components/**` file; any `<!-- generated: … -->` zone in `ds/MANIFEST.md` (regenerated by `/ds-doctor manifest`).
+
+## Git workflow
+
+Branch `ds-docs/001-token-palette-policy`; commit per step; message style: short imperative lowercase prefix like the existing `chore: claude skills`. Do NOT push or open a PR unless instructed.
+
+## Steps
+
+### Step 1: Replace the layer table in `docs/tokens.md`
+Replace lines 7–12 (the table and the sentence beneath it) with exactly:
+
+```markdown
+| Layer | Prefix | Purpose | Consumed by |
+|---|---|---|---|
+| Color primitive | `--palette-*` | Raw palette values | Semantic color tokens only — never components, never app code |
+| Semantic color | `--color-*` | Intent-based color aliases (surface, text, border, action, field, focus) | Components and app code |
+| Scale | `--space-*`, `--radius-*`, `--font-*`, `--line-height-*`, `--duration-*`, `--easing-*`, `--focus-ring-*` | Single-tier spacing, radius, typography, motion and focus values | Components and app code, directly |
+
+Rules:
+
+- `--palette-*` is internal to `src/tokens/tokens.css`. Nothing outside that file — no component, no demo, no consuming app — may reference it.
+- Color in components and app code comes only from `--color-*` tokens. Raw color literals (hex, rgb(), hsl(), named colors) are not permitted outside `src/tokens/tokens.css`. The only exception is `transparent`.
+- Spacing, radius, typography and motion use the scale tokens directly. Literal `px`/`rem`/`em` values are discouraged but not gated; prefer a scale token when one is within the same step.
+- Need a color the semantic layer lacks? Add a semantic token (and a primitive if required) in `tokens.css` via the contribution path in `ds/MANIFEST.md` → Policy; do not reach for `--palette-*` or a literal.
+```
+**Verify**: `grep -n "Consumed by semantic tokens only\|Semantic tokens only" docs/tokens.md` → no output; `grep -c "Color primitive" docs/tokens.md` → `1`.
+
+### Step 2: Correct the over-promising glob on `docs/tokens.md`
+Replace the line `| \`--color-action-{primary,secondary,danger}-{bg,fg,border}[-hover\|-active]\` | Button styling |` with these three rows:
+
+```markdown
+| `--color-action-primary-bg` / `-bg-hover` / `-bg-active` / `-fg` | Primary button |
+| `--color-action-secondary-bg` / `-bg-hover` / `-bg-active` / `-fg` / `-border` | Secondary button |
+| `--color-action-danger-bg` / `-bg-hover` / `-fg` | Danger button |
+```
+Add one sentence directly under the table heading `## Semantic color tokens`: `The authoritative, resolved list is ds/tokens.json (28 tokens per theme); the table below is the human summary.`
+**Verify**: `grep -n "{bg,fg,border}" docs/tokens.md` → no output; `grep -c "ds/tokens.json" docs/tokens.md` → `1`.
+
+### Step 3: Tighten the README convention line
+In `README.md`, under `## Conventions` (line 22 at commit `732ac74`; the working tree may have shifted it — locate by text), replace `- Components consume only semantic tokens (\`--color-*\`), never primitives (\`--palette-*\`).` with:
+`- Color comes only from semantic tokens (\`--color-*\`) — in components *and* in consuming app code. \`--palette-*\` and raw color literals are internal to \`src/tokens/tokens.css\`. Full policy: docs/tokens.md and ds/MANIFEST.md → Policy.`
+**Verify**: `grep -c "in consuming app code" README.md` → `1`.
+
+### Step 4: Transcribe the decision into the manifest policy zone
+In `ds/MANIFEST.md`, inside the `<!-- hand-maintained: policy -->` zone only, replace the two bullets beginning `- **Primitive tokens**` and `- **Raw color literals**` with:
+
+```markdown
+- **Primitive tokens** (`--palette-*`): internal to `src/tokens/tokens.css`. Forbidden in components and in consuming app code.
+- **Raw color literals** (hex / rgb() / hsl() / named colors): forbidden outside `src/tokens/tokens.css`; `transparent` is permitted. Class `token.literal.*` and `token.palette.raw` apply to app code and `src/components/**` alike.
+- **Scale tokens** (`--space-*`, `--radius-*`, `--font-*`, `--duration-*`, `--focus-ring-*`): preferred over literals; not mechanically gated (see Token layer → Enforcement scope).
+```
+Do not edit anything outside that zone.
+**Verify**: `grep -c "see plans/001" ds/MANIFEST.md` → `0`; `grep -c "<!-- generated:" ds/MANIFEST.md` → `4` and `grep -c "<!-- hand-maintained:" ds/MANIFEST.md` → `5` (zone markers intact).
+
+## Test plan
+
+None — documentation only. The verification greps above are the tests.
+
+## Done criteria
+
+- [ ] `npm run typecheck` exits 0
+- [ ] `grep -n "Semantic tokens only" docs/tokens.md` returns no matches
+- [ ] The gap is closed verbatim: `grep -c "Forbidden in components and in consuming app code" ds/MANIFEST.md` → `1`
+- [ ] No source files modified (`git status --porcelain` lists only docs/tokens.md, README.md, ds/MANIFEST.md, plans/README.md)
+- [ ] plans/README.md status row updated
+
+## STOP conditions
+
+- Current-state excerpts don't match live files (drift).
+- `ds/MANIFEST.md` has no `<!-- hand-maintained: policy -->` marker, or the marker appears more than once.
+- The owner wants a different decision than the drafted text (e.g. palette allowed in apps) — record it in the plan's status row and stop; do not invent a middle ground.
+
+## Maintenance notes
+
+Re-run `/ds-doctor manifest` after this lands: yes — the generated notes-for-generators zone restates the palette rule and should be regenerated against the finished policy. The token rename `--color-text_muted` → `--color-text-muted` (READY-03) is a **source** change tracked separately; when it lands, Step 2's token table and ds/tokens.json must be regenerated.
